@@ -1,0 +1,449 @@
+/* 导入 Inter 字体 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* Base Styles */
+:root {
+  --primary-bg: #f8f8f8;
+  --secondary-bg: #ffffff;
+  --text-color: #333333;
+  --header-bg: #a8dadc;
+  --header-text: #ffffff;
+  --accent-color: #457b9d;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --checklist-icon-bg: #f1faee;
+  --checklist-icon-text: #457b9d;
+  --checklist-icon-active-bg: #457b9d;
+  --checklist-icon-active-text: #ffffff;
+  --item-checked-color: #cccccc;
+  --button-bg: #457b9d;
+  --button-text: #ffffff;
+  --input-border: #cccccc;
+  --delete-button-bg: #c0392b; /* 柔和的锈红色 */
+  --delete-button-text: #ffffff;
+}
+
+/* Gentle Theme (Default) */
+.gentle-theme {
+    --primary-bg: #fdf6e3; /* Light cream */
+    --secondary-bg: #ffffff;
+    --text-color: #586e75; /* Dark grey-blue */
+    --header-bg: #83a8a8; /* Muted teal */
+    --header-text: #ffffff;
+    --accent-color: #6c9a8b; /* Soft green-blue */
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --checklist-icon-bg: #f1f8f8;
+    --checklist-icon-text: #6c9a8b;
+    --checklist-icon-active-bg: #6c9a8b;
+    --checklist-icon-active-text: #ffffff;
+    --item-checked-color: #aab8c2; /* Light grey */
+    --button-bg: #6c9a8b;
+    --button-text: #ffffff;
+    --input-border: #cccccc;
+    --delete-button-bg: #d85243; /* 柔和的锈红色 */
+    --delete-button-text: #ffffff;
+}
+
+/* Cyber Theme */
+.cyber-theme {
+    --primary-bg: #1a1a2e; /* Dark blue-purple */
+    --secondary-bg: #0f0f1a; /* Even darker blue-purple */
+    --text-color: #e0e0e0; /* Light grey */
+    --header-bg: #007bff; /* Bright blue */
+    --header-text: #ffffff;
+    --accent-color: #00ffff; /* Cyan */
+    --border-color: #004d4d; /* Dark cyan */
+    --shadow-color: rgba(0, 255, 255, 0.2);
+    --checklist-icon-bg: #0a0a1a;
+    --checklist-icon-text: #00ffff;
+    --checklist-icon-active-bg: #00ffff;
+    --checklist-icon-active-text: #1a1a2e;
+    --item-checked-color: #555555; /* Darker grey */
+    --button-bg: #00ffff;
+    --button-text: #1a1a2e;
+    --input-border: #00ffff;
+    --delete-button-bg: #ff66cc; /* 霓虹粉色 */
+    --delete-button-text: #1a1a2e;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+.app-header {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    border-radius: 0 0 10px 10px;
+}
+.header-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: linear-gradient(to right, var(--accent-color), var(--header-bg));
+    border-radius: 0 0 10px 10px;
+}
+.app-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+}
+.theme-toggle-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: var(--accent-color);
+    color: var(--button-text);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+.theme-toggle-button:hover {
+    opacity: 0.8;
+}
+.checklist-navigation {
+    background-color: var(--secondary-bg);
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    margin: 20px;
+    border-radius: 10px;
+}
+.checklist-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.checklist-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.checklist-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    background-color: var(--checklist-icon-bg);
+    color: var(--checklist-icon-text);
+    font-size: 1em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    padding: 0;
+}
+.checklist-icon:hover {
+    background-color: var(--accent-color);
+    color: var(--checklist-icon-active-text);
+}
+.checklist-icon.active {
+    background-color: var(--checklist-icon-active-bg);
+    color: var(--checklist-icon-active-text);
+    border-color: var(--checklist-icon-active-bg);
+}
+.add-new-checklist {
+    font-size: 1.5em;
+}
+.delete-checklist-button {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--delete-button-bg);
+    color: var(--delete-button-text);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 0.3s ease;
+}
+.delete-checklist-button:hover {
+    opacity: 0.8;
+}
+.add-category-section {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.add-category-input {
+    flex-grow: 1;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+.add-category-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.add-category-button:hover {
+    opacity: 0.8;
+}
+.app-main {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 0 20px 30px;
+    flex-wrap: wrap;
+}
+.checklist-section, .recommendations-section {
+    background-color: var(--secondary-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    padding: 25px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+.checklist-section h2, .recommendations-section h2 {
+    color: var(--accent-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.checklist-section h2 span {
+    margin-right: auto;
+}
+.export-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+.export-button:hover {
+    opacity: 0.8;
+}
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.category-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--text-color);
+    font-weight: bold;
+}
+.category-actions {
+    display: flex;
+    gap: 5px;
+}
+.add-item-to-category-button, .delete-category-button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+.add-item-to-category-button {
+    background-color: var(--accent-color);
+    color: var(--button-text);
+}
+.add-item-to-category-button:hover {
+    opacity: 0.8;
+}
+.delete-category-button {
+    background-color: var(--delete-button-bg);
+    color: var(--delete-button-text);
+}
+.delete-category-button:hover {
+    opacity: 0.8;
+}
+.checklist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+.checklist-item:last-child {
+    border-bottom: none;
+}
+.item-details {
+    display: flex;
+    align-items: center;
+}
+.checklist-item input[type="checkbox"] {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent-color);
+}
+.checklist-item.checked label {
+    text-decoration: line-through;
+    color: var(--item-checked-color);
+}
+.delete-item-button {
+    background-color: var(--delete-button-bg);
+    color: var(--delete-button-text);
+    border: none;
+    border-radius: 5px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 0.7em;
+    transition: background-color 0.3s ease;
+}
+.delete-item-button:hover {
+    opacity: 0.8;
+}
+.recommendations-section {
+    display: flex;
+    flex-direction: column;
+}
+.recommendation-list {
+    list-style: none;
+    padding: 0;
+}
+.recommendation-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+.recommendation-list li:last-child {
+    border-bottom: none;
+}
+.ai-prompt-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+.ai-loading-spinner {
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    align-self: center;
+    margin: 20px 0;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.error-message {
+    color: var(--delete-button-bg);
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: var(--secondary-bg);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.modal-button.confirm {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+.modal-button.cancel {
+    background-color: var(--delete-button-bg);
+    color: var(--delete-button-text);
+}
+.add-modal-input {
+    width: calc(100% - 30px);
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    margin-top: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .app-main {
+        flex-direction: column;
+        align-items: center;
+    }
+    .checklist-section, .recommendations-section {
+        max-width: 95%;
+    }
+    .theme-toggle-button {
+        position: static;
+        margin-top: 10px;
+    }
+    .app-header {
+        padding: 20px;
+    }
+}

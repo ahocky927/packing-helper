@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行李收拾助手</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-decoration"></div>
+        <h1>行李收拾助手</h1>
+        <button id="theme-toggle" class="theme-toggle-button">切换主题</button>
+    </header>
+
+    <nav class="checklist-navigation">
+        <div class="checklist-icons" id="checklist-icons">
+            <!-- 清单图标将在这里动态加载 -->
+        </div>
+    </nav>
+
+    <main class="app-main">
+        <section id="current-checklist" class="checklist-section">
+            <h2>当前清单：<span id="current-checklist-title">回家</span></h2>
+            <div id="checklist-items">
+                <!-- 物品列表将在这里动态加载 -->
+            </div>
+            <div class="add-category-section">
+                <input type="text" id="new-category-input" placeholder="添加新分类" class="add-category-input">
+                <button id="add-category-button" class="add-category-button">添加分类</button>
+            </div>
+        </section>
+
+        <section id="ai-recommendations" class="recommendations-section">
+            <h2>AI 推荐</h2>
+            <div class="ai-prompt-container">
+                <button id="get-ai-button" class="add-category-button">获取 AI 推荐</button>
+            </div>
+            <div id="ai-loading" class="ai-loading-spinner" style="display: none;"></div>
+            <p id="ai-error" class="error-message" style="display: none;"></p>
+            <ul id="recommendation-list">
+                <!-- AI 推荐物品将在这里动态加载 -->
+                <li>点击“获取 AI 推荐”按钮，获取打包建议。</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- 自定义模态框 -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button id="modal-confirm" class="modal-button confirm">确定</button>
+                <button id="modal-cancel" class="modal-button cancel" style="display: none;">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加模态框 -->
+    <div id="add-modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="add-modal-title"></h3>
+            <input type="text" id="add-modal-input" class="add-modal-input">
+            <div class="modal-actions">
+                <button id="add-modal-confirm" class="modal-button confirm">确定</button>
+                <button id="add-modal-cancel" class="modal-button cancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
