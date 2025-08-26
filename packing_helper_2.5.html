@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>行李收拾助手 — 2.0</title>
+  <style>
+:root{--primary-bg:#f8f8f8;
+  --secondary-bg:#fff;
+  --text-color:#333;
+  --header-bg:#a8dadc;
+  --header-text:#fff;
+  --accent-color:#457b9d;
+  --border-color:#e0e0e0;
+  --shadow-color:rgba(0,0,0,.1);
+  --checklist-icon-bg:#f1faee;
+  --checklist-icon-text:#457b9d;
+  --checklist-icon-active-bg:#457b9d;
+  --checklist-icon-active-text:#fff;
+  --item-checked-color:#ccc;
+  --button-bg:#457b9d;
+  --button-text:#fff;
+  --input-border:#ccc;
+  --delete-button-bg:#c0392b;
+  --delete-button-text:#fff;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Noto Sans CJK SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;background:var(--primary-bg);color:var(--text-color);transition:background .2s,color .2s}
+/* gentle */
+.gentle-theme{
+  --primary-bg:#fdf6e3;
+  --secondary-bg:#fff;
+  --text-color:#586e75;
+  --header-bg:#83a8a8;
+  --header-text:#fff;
+  --accent-color:#6c9a8b;
+  --border-color:#e0e0e0;
+  --shadow-color:rgba(0,0,0,.06);
+  --checklist-icon-bg:#f1f8f8;
+  --checklist-icon-text:#6c9a8b;
+  --checklist-icon-active-bg:#6c9a8b;
+  --checklist-icon-active-text:#fff;
+  --item-checked-color:#aab8c2;
+  --button-bg:#6c9a8b;
+  --button-text:#fff;
+  --input-border:#ccc;
+  --delete-button-bg:#d75d4f;
+  --delete-button-text:#fff;
+}
+/* cyber */
+.cyber-theme{
+  --primary-bg:#121229;
+  --secondary-bg:#1b1b2f;
+  --text-color:#ff66cc;
+  --header-bg:#0f1a3c;
+  --header-text:#f0f4ff;
+  --accent-color:#3bc4ff;
+  --border-color:#2a2a4a;
+  --shadow-color:rgba(59,196,255,0.2);
+  --checklist-icon-bg:#1b1b2f;
+  --checklist-icon-text:#3bc4ff;
+  --checklist-icon-active-bg:#3bc4ff;
+  --checklist-icon-active-text:#121229;
+  --item-checked-color:#6a6e8c;
+  --button-bg:#3bc4ff;
+  --button-text:#121229;        
+  --input-border:#444464; 
+  --delete-button-bg:#ff66cc;   
+  --delete-button-text:#fff;
+}
+/* night soft */
+.night-theme{
+  --primary-bg:#0e0f14;             /* 主背景 */
+  --secondary-bg:#1b1c22;           /* 卡片/导航背景 */
+  --text-color:#cfcdd1;             /* 文字颜色 */
+  --header-bg:#1c1e26;              /* 顶部条背景 */
+  --header-text:#e0dff2;            /* 顶部文字 */
+  --accent-color:#7458c6;           /* 强调色（紫色） */
+  --border-color:#22252d;           /* 边框 */
+  --shadow-color:rgba(142,108,240,0.5); /* 阴影 */
+  --checklist-icon-bg:#1b1c22;      /* 清单图标背景 */
+  --checklist-icon-text:#7458c6;    /* 清单图标文字 */
+  --checklist-icon-active-bg:#7458c6;  /* 激活图标背景 */
+  --checklist-icon-active-text:#0e0f14; /* 激活图标文字 */
+  --item-checked-color:#615e75;     /* 已选物品颜色 */
+  --button-bg:#7458c6;              /* 按钮背景 */
+  --button-text:#0e0f14;            /* 按钮文字 */
+  --input-border:#333646;           /* 输入框边框 */
+  --delete-button-bg:#bc4456e8;       /* 删除按钮背景（柔和红） */
+  --delete-button-text:#cfcdd1;        /* 删除按钮文字 */
+}
+.app-header{background:var(--header-bg);color:var(--header-text);padding:18px 14px 8px;text-align:center;position:sticky;top:0;z-index:10;border-radius:0 0 12px 12px;box-shadow:0 2px 6px var(--shadow-color)}.header-decoration{position:absolute;right:0;left:0;bottom:0;height:8px;background:linear-gradient(90deg,var(--accent-color),transparent);border-radius:0 0 12px 12px}.app-header h1{margin:6px 0 0;font-size:20px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;margin-bottom:6px}.toolbar button{padding:8px 10px;border-radius:10px;border:0;background:var(--accent-color);color:var(--button-text);font-weight:600}
+.checklist-navigation{background:var(--secondary-bg);padding:12px;margin:14px;border-radius:12px;box-shadow:0 4px 14px var(--shadow-color)}
+.checklist-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.checklist-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.checklist-icon {
+  min-width: 68px;
+  height: 40px;
+  border-radius: 999px;
+  padding: 0 14px;
+  border: 2px solid var(--accent-color);
+  background: var(--checklist-icon-bg);
+  color: var(--checklist-icon-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.checklist-icon.active {
+  background: var(--checklist-icon-active-bg);
+  color: var(--checklist-icon-active-text);
+  border-color: var(--checklist-icon-active-bg);
+}
+
+.delete-checklist-button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--delete-button-bg);
+  color: var(--delete-button-text);
+  border: 0;
+  border-radius: 999px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.checklist-icon.add-new-checklist {
+  border: 2px dashed var(--accent-color);
+  background: var(--secondary-bg);
+  color: var(--accent-color);
+}
+.app-main{display:grid;gap:14px;padding:0 14px 24px}.card{background:var(--secondary-bg);border-radius:12px;padding:14px;box-shadow:0 6px 18px var(--shadow-color)}.card h2{margin:0 0 10px;color:var(--accent-color);padding-bottom:8px;border-bottom:2px solid var(--border-color)}
+.add-category-section{display:flex;gap:8px;margin-top:10px}.add-category-input{flex:1;padding:10px;border-radius:8px;border:1px solid var(--input-border);background:var(--secondary-bg);color:var(--text-color)}
+.btn{padding:10px 12px;border-radius:8px;border:0;background:var(--button-bg);color:var(--button-text);font-weight:700}
+.category-header{display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:6px}.category-actions{display:flex;gap:8px}
+.checklist-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border-color)}.item-details{display:flex;align-items:center;gap:10px;flex:1}.checklist-item input[type="checkbox"]{width:22px;height:22px;accent-color:var(--accent-color)}.checklist-item.checked label{color:var(--item-checked-color);text-decoration:line-through}
+.recommendation-list{list-style:none;padding:0;margin:8px 0}.recommendation-list li{padding:8px 0;border-bottom:1px dashed var(--border-color)}
+.ai-loading-spinner{width:26px;height:26px;border-radius:50%;border:4px solid var(--border-color);border-top-color:var(--accent-color);animation:spin 1s linear infinite;display:none;margin:10px auto}@keyframes spin{to{transform:rotate(360deg)}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:40}.modal-content{background:var(--secondary-bg);padding:18px;border-radius:12px;max-width:92vw;box-shadow:0 6px 20px rgba(0,0,0,.25);text-align:center}.modal-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
+@media(min-width:900px){.app-main{grid-template-columns:1fr 1fr}}
+
+.checklist-icon-wrapper {
+  display: inline-block;      /* 保持横向排列 */
+  position: relative;         /* 关键：为删除按钮提供定位参照 */
+  margin: 4px;                /* 图标之间的间距 */
+}
+
+.delete-checklist-button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--delete-button-bg);
+  color: var(--delete-button-text);
+  border: 0;
+  border-radius: 999px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 新增：删除按钮的CSS类 */
+.delete-button {
+  background: var(--delete-button-bg) !important;
+  color: var(--delete-button-text) !important;
+}
+  </style>
+</head>
+<body class="gentle-theme">
+  <header class="app-header">
+    <div class="header-decoration"></div>
+    <h1>行李收拾助手</h1>
+    <div class="toolbar" role="toolbar" aria-label="功能按钮">
+      <button id="api-key">API 密钥</button>
+      <button id="export-img">导出图片</button>
+      <button id="export-txt">导出文本</button>
+      <button id="theme-cycle">切换主题</button>
+    </div>
+  </header>
+
+  <nav class="checklist-navigation">
+    <div class="checklist-icons" id="checklist-icons"></div>
+  </nav>
+
+  <main class="app-main" id="app-main">
+    <section class="card" id="export-card">
+      <h2>当前清单：<span id="current-checklist-title">回家</span></h2>
+      <div id="checklist-items"></div>
+      <div class="add-category-section">
+        <input type="text" id="new-category-input" class="add-category-input" placeholder="添加新分类" inputmode="text" />
+        <button id="add-category-button" class="btn">添加分类</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>AI 推荐</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="get-ai-button" class="btn">获取 AI 推荐</button>
+        <div id="ai-loading" class="ai-loading-spinner" aria-hidden="true"></div>
+      </div>
+      <p id="ai-error" style="display:none;color:var(--delete-button-bg);margin-top:8px;"></p>
+      <ul id="recommendation-list" class="recommendation-list">
+        <li>点击"获取 AI 推荐"按钮，获取打包建议。</li>
+      </ul>
+    </section>
+  </main>
+
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <p id="modal-message"></p>
+      <div class="modal-actions">
+        <button id="modal-confirm" class="btn">确定</button>
+        <button id="modal-cancel" class="btn delete-button">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="add-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <h3 id="add-modal-title" style="margin:0 0 10px;">添加</h3>
+      <input id="add-modal-input" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--input-border)" />
+      <div class="modal-actions">
+        <button id="add-modal-confirm" class="btn">确定</button>
+        <button id="add-modal-cancel" class="btn delete-button">取消</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const STORAGE_KEY = "packingData_v2";
+  const THEME_KEY = "packingTheme_v2";
+  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=";
+
+  const els = {
+    checklistIcons: document.getElementById("checklist-icons"),
+    currentChecklistTitle: document.getElementById("current-checklist-title"),
+    checklistItems: document.getElementById("checklist-items"),
+    newCategoryInput: document.getElementById("new-category-input"),
+    addCategoryButton: document.getElementById("add-category-button"),
+    themeCycle: document.getElementById("theme-cycle"),
+    getAI: document.getElementById("get-ai-button"),
+    aiLoading: document.getElementById("ai-loading"),
+    aiError: document.getElementById("ai-error"),
+    recommendationList: document.getElementById("recommendation-list"),
+    modalOverlay: document.getElementById("modal-overlay"),
+    modalMessage: document.getElementById("modal-message"),
+    modalConfirm: document.getElementById("modal-confirm"),
+    modalCancel: document.getElementById("modal-cancel"),
+    addModalOverlay: document.getElementById("add-modal-overlay"),
+    addModalTitle: document.getElementById("add-modal-title"),
+    addModalInput: document.getElementById("add-modal-input"),
+    addModalConfirm: document.getElementById("add-modal-confirm"),
+    addModalCancel: document.getElementById("add-modal-cancel"),
+    apiKeyBtn: document.getElementById("api-key"),
+    exportImgBtn: document.getElementById("export-img"),
+    exportTxtBtn: document.getElementById("export-txt"),
+    exportCard: document.getElementById("export-card"),
+  };
+
+  let state = {
+    checklists: {
+      home: { name: "回家", items: { "衣物类": [{name:"T恤",checked:false},{name:"裤子",checked:false}], "电子类":[{name:"充电器",checked:false}], "洗漱":[{name:"牙刷",checked:false}] } },
+      school: { name: "返校", items: { "学习":[{name:"笔记本",checked:false}], "电子":[{name:"笔记本电脑",checked:false}] } },
+      travel: { name: "旅行", items: { "证件":[{name:"护照",checked:false}], "衣物":[{name:"泳衣",checked:false}] } }
+    },
+    activeChecklist: "home",
+    currentTheme: localStorage.getItem(THEME_KEY) || "gentle-theme",
+    apiKey: localStorage.getItem("packing_api_key") || "",
+  };
+
+  let modalCallback = null;
+  let addModalType = null;
+  let addModalCategory = null;
+
+  function loadData(){
+    try{const s=localStorage.getItem(STORAGE_KEY); if(s){ const parsed=JSON.parse(s); state = {...state,...parsed}; }}
+    catch(e){console.warn("load error",e);}
+    //applyTheme(state.currentTheme);
+    renderAll();
+  }
+  function saveData(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+  const themes = ["gentle-theme","cyber-theme","night-theme"];
+  function applyTheme(theme){ document.body.classList.remove(...themes); document.body.classList.add(theme); state.currentTheme=theme; localStorage.setItem(THEME_KEY, theme); }
+  function cycleTheme(){ const idx = themes.indexOf(state.currentTheme); const next = themes[(idx+1)%themes.length]; applyTheme(next); }
+  els.themeCycle.addEventListener("click", cycleTheme);
+
+  els.apiKeyBtn.addEventListener("click", ()=>{
+    const input = prompt("请输入 Gemini API Key（留空使用离线推荐）：", state.apiKey || "");
+    if(input!==null){ state.apiKey = input.trim(); if(state.apiKey) { localStorage.setItem("packing_api_key", state.apiKey); alert("已保存 API Key。"); } else { localStorage.removeItem("packing_api_key"); alert("已清除 API Key，使用离线推荐。"); } }
+  });
+
+function renderChecklistIcons() {
+  els.checklistIcons.innerHTML = "";
+  Object.keys(state.checklists).forEach(key => {
+    const c = state.checklists[key];
+    const wrap = document.createElement("div");
+    wrap.className = "checklist-icon-wrapper";
+
+    // 清单按钮
+    const btn = document.createElement("button");
+    btn.className = "checklist-icon" + (state.activeChecklist === key ? " active" : "");
+    btn.textContent = c.name;
+    btn.addEventListener("click", () => {
+      state.activeChecklist = key;
+      saveData();
+      renderAll();
+    });
+    wrap.appendChild(btn);
+
+    // 非默认清单的删除按钮
+    if (!["home", "school", "travel"].includes(key)) {
+      const del = document.createElement("button");
+      del.className = "delete-checklist-button";
+      del.textContent = "×";
+      del.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showModal(`确定删除清单「${c.name}」吗？`, () => {
+          delete state.checklists[key];
+          if (state.activeChecklist === key) state.activeChecklist = "home";
+          saveData();
+          renderAll();
+        }, true);
+      });
+      wrap.appendChild(del);
+    }
+
+    els.checklistIcons.appendChild(wrap);
+  });
+
+  // 添加新清单按钮也包在 wrapper 里
+  const addWrap = document.createElement("div");
+  addWrap.className = "checklist-icon-wrapper";
+  const add = document.createElement("button");
+  add.className = "checklist-icon add-new-checklist";
+  add.textContent = "+";
+  add.title = "添加新清单";
+  add.addEventListener("click", () => showAddModal("checklist"));
+  addWrap.appendChild(add);
+  els.checklistIcons.appendChild(addWrap);
+}
+
+  function renderChecklistItems(){
+    els.checklistItems.innerHTML = "";
+    const active = state.checklists[state.activeChecklist];
+    els.currentChecklistTitle.textContent = active.name;
+    const keys = Object.keys(active.items);
+    if(!keys.length){ els.checklistItems.innerHTML = '<p style="opacity:.7">此清单暂无分类。请添加！</p>'; return; }
+    keys.forEach(cat=>{
+      const items = active.items[cat];
+      const block = document.createElement("div");
+      const header = document.createElement("div"); header.className="category-header";
+      const title = document.createElement("h3"); title.textContent = cat;
+      const actions = document.createElement("div"); actions.className="category-actions";
+      const addBtn = document.createElement("button"); addBtn.className="btn"; addBtn.textContent="添加物品"; addBtn.addEventListener("click", ()=> showAddModal("item", cat));
+      const delBtn = document.createElement("button"); delBtn.className="btn delete-button"; delBtn.textContent="删除分类"; delBtn.addEventListener("click", ()=> showModal(`删除分类「${cat}」及其所有物品？`, ()=>{ delete state.checklists[state.activeChecklist].items[cat]; saveData(); renderAll(); }, true));
+      actions.appendChild(addBtn); actions.appendChild(delBtn);
+      header.appendChild(title); header.appendChild(actions);
+      block.appendChild(header);
+      items.forEach((item, idx)=>{
+        const row = document.createElement("div"); row.className="checklist-item"+(item.checked?" checked":"");
+        const details = document.createElement("div"); details.className="item-details";
+        const cb = document.createElement("input"); cb.type="checkbox"; cb.checked = item.checked; cb.addEventListener("change", ()=>{ item.checked = !item.checked; saveData(); renderAll(); });
+        const label = document.createElement("label"); label.textContent = item.name;
+        const delItem = document.createElement("button"); delItem.className="btn delete-button"; delItem.textContent="删除"; delItem.addEventListener("click", ()=> showModal(`删除物品「${item.name}」？`, ()=>{ state.checklists[state.activeChecklist].items[cat].splice(idx,1); saveData(); renderAll(); }, true));
+        details.appendChild(cb); details.appendChild(label);
+        row.appendChild(details); row.appendChild(delItem);
+        block.appendChild(row);
+      });
+      els.checklistItems.appendChild(block);
+    });
+  }
+
+  function renderAll(){ renderChecklistIcons(); renderChecklistItems(); }
+
+  els.addCategoryButton.addEventListener("click", ()=>{
+    const v = els.newCategoryInput.value.trim(); if(!v) return;
+    const active = state.checklists[state.activeChecklist]; if(active.items[v]) return showModal("该分类已存在！");
+    active.items[v] = []; els.newCategoryInput.value=""; saveData(); renderAll();
+  });
+
+  function showModal(message, onConfirm=null, showCancel=false){
+    els.modalMessage.textContent = message; document.getElementById("modal-overlay").style.display="flex"; modalCallback = onConfirm; document.getElementById("modal-cancel").style.display = showCancel ? "inline-block" : "none";
+  }
+  els.modalConfirm.addEventListener("click", ()=>{ if(modalCallback) modalCallback(); document.getElementById("modal-overlay").style.display="none"; modalCallback=null; });
+  els.modalCancel.addEventListener("click", ()=>{ document.getElementById("modal-overlay").style.display="none"; modalCallback=null; });
+
+  function showAddModal(type, category=null){
+    addModalType = type; addModalCategory = category;
+    document.getElementById("add-modal-title").textContent = type==="checklist" ? "添加新清单" : `在「${category}」中添加物品`;
+    els.addModalInput.value = ""; document.getElementById("add-modal-overlay").style.display="flex"; setTimeout(()=> els.addModalInput.focus(), 50);
+  }
+  function hideAddModal(){ document.getElementById("add-modal-overlay").style.display="none"; }
+  els.addModalConfirm.addEventListener("click", ()=>{
+    const v = els.addModalInput.value.trim(); if(!v) return hideAddModal();
+    if(addModalType==="checklist"){
+      const key = v.toLowerCase().replace(/\s+/g,"-"); if(state.checklists[key]) showModal("该清单名称已存在！"); else { state.checklists[key] = { name: v, items: {} }; state.activeChecklist = key; saveData(); renderAll(); }
+    } else {
+      const act = state.checklists[state.activeChecklist]; if(!act.items[addModalCategory]) act.items[addModalCategory]=[]; act.items[addModalCategory].push({ name: v, checked: false }); saveData(); renderAll();
+    }
+    hideAddModal();
+  });
+  els.addModalCancel.addEventListener("click", hideAddModal);
+  els.addModalInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); els.addModalConfirm.click(); } });
+
+  // AI Recommend (offline fallback)
+  function localRecommend(activeName, items){
+    const base = ["手机充电器","移动电源","数据线","纸巾","雨伞/雨衣","水杯","创可贴","常用药","口罩"];
+    if(activeName.includes("旅行")) base.push("护照","身份证","机票/车票","防晒霜","墨镜","洗漱包","拖鞋");
+    if(activeName.includes("返校")) base.push("学生证","校园卡","U盘","钥匙","笔记本","文具袋");
+    if(activeName.includes("回家")) base.push("礼物","换洗衣物","家门钥匙");
+    const owned = new Set(Object.values(items).flat().map(it=>it.name));
+    return base.filter(x=>!owned.has(x)).slice(0,12);
+  }
+
+  async function getAIRecommendations(){
+    els.aiLoading.style.display="block"; els.aiError.style.display="none"; els.recommendationList.innerHTML="";
+    const active = state.checklists[state.activeChecklist];
+    const prompt = `旅行类型：${active.name}\n已有物品：${JSON.stringify(active.items)}`;
+    if(!state.apiKey){ renderRecommendations(localRecommend(active.name, active.items)); els.aiLoading.style.display="none"; return; }
+    try{
+      const res = await fetch(API_URL + encodeURIComponent(state.apiKey), { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ contents:[{ role:"user", parts:[{ text: prompt }] }] }) });
+      if(!res.ok) throw new Error("API error " + res.status);
+      const data = await res.json(); const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const list = text.split(",").map(s=>s.trim()).filter(Boolean);
+      if(list.length) renderRecommendations(list); else throw new Error("empty");
+    } catch(err){ console.warn(err); els.aiError.textContent = "在线 AI 推荐失败，已为你提供离线推荐。"; els.aiError.style.display="block"; renderRecommendations(localRecommend(active.name, active.items)); }
+    finally{ els.aiLoading.style.display="none"; }
+  }
+  function renderRecommendations(arr){ els.recommendationList.innerHTML=""; if(!arr.length){ els.recommendationList.innerHTML="<li>暂无推荐</li>"; return; } arr.forEach(it=>{ const li=document.createElement("li"); li.textContent=it; els.recommendationList.appendChild(li); }); }
+  els.getAI.addEventListener("click", getAIRecommendations);
+
+  // Export Text
+  function exportAsText(){
+    const active = state.checklists[state.activeChecklist];
+    let out = `清单：${active.name}\n\n`;
+    Object.keys(active.items).forEach(cat=>{ out += `==== ${cat} ====\n`; active.items[cat].forEach(it=> out += (it.checked ? "[x] " : "[ ] ") + it.name + "\n"); out += "\n"; });
+const blob = new Blob([new Uint8Array([0xEF,0xBB,0xBF]), out], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = (active.name || "清单") + ".txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+  els.exportTxtBtn.addEventListener("click", exportAsText);
+
+  // Export Image: try html2canvas if present, otherwise fallback to SVG foreignObject rendering
+function exportAsImage() {
+  const node = els.exportCard;
+
+  // 获取主题颜色
+  const styles = getComputedStyle(document.body);
+  const bgColor = styles.getPropertyValue('--secondary-bg') || '#fff';
+  const textColor = styles.getPropertyValue('--text-color') || '#333';
+  const checkedColor = styles.getPropertyValue('--item-checked-color') || '#ccc';
+
+  // 构建文本内容
+  const active = state.checklists[state.activeChecklist];
+  const lines = [];
+  lines.push(`清单：${active.name}`);
+  Object.keys(active.items).forEach(cat => {
+    lines.push(`==== ${cat} ====`);
+    active.items[cat].forEach(item => {
+      const prefix = item.checked ? "[x] " : "[ ] ";
+      lines.push(prefix + item.name);
+    });
+    lines.push("");
+  });
+
+  const scale = Math.min(2, window.devicePixelRatio || 2);
+  let fontSize = 18 * scale;
+  const lineHeight = fontSize * 1.4;
+  const padding = 20;
+
+  // 测量最大文本宽度
+  const tmpCanvas = document.createElement("canvas");
+  const tmpCtx = tmpCanvas.getContext("2d");
+  tmpCtx.font = `${fontSize}px system-ui, Arial, sans-serif`;
+  let maxTextWidth = Math.max(...lines.map(line => tmpCtx.measureText(line).width));
+
+  // 限制最大宽度
+  const maxWidth = Math.min(800, maxTextWidth + padding * 2);
+
+  // 创建画布
+  const canvas = document.createElement("canvas");
+  canvas.width = maxWidth;
+  canvas.height = lineHeight * lines.length + padding * 2;
+  const ctx = canvas.getContext("2d");
+
+  // 背景色
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.textBaseline = "top";
+  ctx.textAlign = "center"; // 水平居中
+
+  // 自动缩放字体以适应最大宽度
+  if (maxTextWidth + padding * 2 > maxWidth) {
+    const scaleFactor = (maxWidth - padding * 2) / maxTextWidth;
+    fontSize *= scaleFactor;
+  }
+  ctx.font = `${fontSize}px system-ui, Arial, sans-serif`;
+
+  // 绘制文本
+  let y = padding;
+  lines.forEach(line => {
+    const isChecked = line.startsWith("[x] ");
+    ctx.fillStyle = isChecked ? checkedColor : textColor;
+    ctx.fillText(line, canvas.width / 2, y); // 居中绘制
+    y += fontSize * 1.4;
+  });
+
+  // 导出图片
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = (active.name || "清单") + ".png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+  els.exportImgBtn.addEventListener("click", exportAsImage);
+
+  // init
+  loadData();
+})();
+</script>
+</body>
+</html>
